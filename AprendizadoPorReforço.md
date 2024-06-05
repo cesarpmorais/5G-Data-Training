@@ -13,12 +13,31 @@ RL possui 4 elementos principais (além do agente):
 3. Valor do Estado: é a quantidade acumulada de recompensas que um agente pode receber no futuro se ficar nesse estado. É uma noção em longo-prazo, pois estados que aparentam não ser bons no momento podem levar a outros muito recompensantes.
 4. Modelo do Ambiente: é um mecanismo que simula as condições ambientais e possibilita predições para o agente.
 
-## Vantagens
+## Vantagens e Desvantagens
+### Vantagens
 - Pode ser usado em problemas complexos, incapazes de serem resolvidos por técnicas comuns;
 - Dados de treinamento são gerados ao longo da interação do agente com o ambiente;
 - É flexível e funciona em diversos casos;
 - Funciona em ambientes altamente não-determinísticos.
-## Desvantagens
+### Desvantagens
 - Caro em dados e computação - não se deve utilizar para problemas simples;
 - Complexo de debugar e interpretar;
 - Altamente dependente da qualidade da Função de Recompensa - deve ser corretamente modelada.
+
+## [Tipos de algoritmos de RL - OpenAI](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)
+Um dos pontos mais importantes de qualquer algoritmo de RL é a existência ou não de um modelo, ou seja, uma função que prediz transição de estado e recompensas.
+
+Caso seja possível prover tal modelo para a máquina, os agentes podem planejar e prever suas ações, o que resulta em maior eficiência de aprendizado.
+
+Entretanto, não possuímos tal modelo na maioria dos casos, e nesse caso o agente deve descobrir o modelo por si mesmo. Esse cenários traz desafios: o modelo pode ter um viés exploitado pelo agente que não se traduz em boa performance no mundo real, por exemplo. Apesar disso, soluções Model-Free são geralmente mais fáceis de implementar e ajustar.
+
+### [Model-Free RL](https://medium.com/@oumoudhmine/q-learning-and-ppo-driving-forces-in-openais-ai-mastery-655027c8670f)
+A OpenAI usa dois métodos: Q-Learning e Proximal Policy Optimization (PPO). Como cada um funciona?
+
+PPO tem como principal vantagem o fato de que estamos otimizando diretamente o nosso objetivo, através da policy. Q-Learning é menos estável nesse sentido, mas é mais eficiente, pois pode reutilizar melhor os dados. Existem algoritmos que usam os dois métodos em conjunto.
+
+## Model-Based RL
+Existem formas variadas de se usar modelos, mas algumas das principais são:
+- Planejamento Puro: é a abordagem mais simples - a policy nunca é explicitada, mas sim técnicas de planejamento são usadas para selecionar ações. Um exemplo é o Model-Predictive Control, onde o agente faz um plano em um horizonte fixo de tempo, e o descarta após a sua primeira ação;
+- Expert Iteration: ...
+- Data Augmentation for Model-Free Methods: ...
