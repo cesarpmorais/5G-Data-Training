@@ -36,8 +36,13 @@ A OpenAI usa dois métodos: Q-Learning e Proximal Policy Optimization (PPO). Com
 
 PPO tem como principal vantagem o fato de que estamos otimizando diretamente o nosso objetivo, através da policy. Q-Learning é menos estável nesse sentido, mas é mais eficiente, pois pode reutilizar melhor os dados. Existem algoritmos que usam os dois métodos em conjunto.
 
-## Model-Based RL
+### Model-Based RL
 Existem formas variadas de se usar modelos, mas algumas das principais são:
-- Planejamento Puro: é a abordagem mais simples - a policy nunca é explicitada, mas sim técnicas de planejamento são usadas para selecionar ações. Um exemplo é o Model-Predictive Control, onde o agente faz um plano em um horizonte fixo de tempo, e o descarta após a sua primeira ação;
-- Expert Iteration: ...
-- Data Augmentation for Model-Free Methods: ...
+
+- Planejamento Puro: é a abordagem mais simples - a policy nunca é explicitada, mas sim técnicas de planejamento são usadas para selecionar ações. Um exemplo é o Model-Predictive Control, onde o agente constrói um plano para um horizonte fixo de tempo com base no modelo do ambiente. Após executar a primeira ação desse plano, o agente descarta o restante do plano e refaz o planejamento com base no novo estado observado. Isso permite que o agente se ajuste dinamicamente a novas informações a cada passo;
+
+- Expert Iteration: Nesta abordagem, o agente alterna entre aprendizado e planejamento. Usando a policy atual, o agente gera ações candidatas para os próximos passos por meio de algum algoritmo de planejamento. O planejamento age como um "expert", refinando as ações sugeridas pela policy. Isso pode resultar em um agente que melhora sua policy ao imitar e aprender das ações mais refinadas geradas pelo planejamento. É um ciclo iterativo onde a policy e o modelo se aprimoram mutuamente.
+
+- Data Augmentation for Model-Free Methods: a ideia é aproveitar o modelo para gerar experiências fictícias, que são usadas para treinar algoritmos Model-Free. Isso pode aumentar significativamente a quantidade de dados de treinamento disponíveis, melhorando a eficiência do aprendizado.
+
+OBS: Explicações em alto nível, assunto fica bem complexo rapidamente. Chat-GPT ajudou para escrever o resumo!
