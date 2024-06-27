@@ -4,14 +4,15 @@ import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 
 def get_datasets():
     og_df = pd.read_csv("../files/5G_attack_detection_ds.csv")
     pca_df = pd.read_csv("../files/pca_reduced_ds.csv")
     pearson_df = pd.read_csv("../files/pearson_reduced_ds.csv")
+    lda_df = pd.read_csv("../files/lda_reduced_ds.csv")
 
-    return og_df, pca_df, pearson_df
+    return og_df, pca_df, pearson_df, lda_df
 
 
 def prepare_dataset(df):
@@ -45,7 +46,7 @@ def analyse_ml_results(y_test, y_pred):
 
 
 def plot_auc_and_f1(auc_list, f1_score_list):
-    model_names = ['Original DS', 'Pearson', 'PCA']
+    model_names = ['Original DS', 'Pearson', 'PCA', 'LDA']
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))  # 1 row, 2 columns
 
