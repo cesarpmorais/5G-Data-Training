@@ -70,3 +70,30 @@ def plot_auc_and_f1(auc_list, f1_score_list):
 
     # Display the plot
     plt.show()
+
+
+def plot_auc_and_f1_reduced(auc_list, f1_score_list):
+    model_names = ['Pearson', 'PCA', 'LDA']
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))  # 1 row, 2 columns
+
+    # Plot AUC
+    ax1.bar(range(len(auc_list)), auc_list)
+    ax1.set_ylabel('AUC Values')
+    ax1.set_title('AUC')
+
+    # Adding x-axis labels with specific model names
+    ax1.set_xticks(range(len(auc_list)))  # Setting the tick positions
+    ax1.set_xticklabels(model_names) 
+
+    # Plot F1-Score
+    ax2.bar(range(len(f1_score_list)), f1_score_list)
+    ax2.set_ylabel('F1-Score Values')
+    ax2.set_title('F1-Score')
+
+    # Adding x-axis labels with specific model names
+    ax2.set_xticks(range(len(f1_score_list)))  # Setting the tick positions
+    ax2.set_xticklabels(model_names) 
+
+    # Display the plot
+    plt.show()
