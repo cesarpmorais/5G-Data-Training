@@ -4,7 +4,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
-
+from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 
 class Method:
@@ -47,16 +47,30 @@ def get_methods() -> list:
             }
         ),
         
-        Method('random_forest', RandomForestClassifier, {
-            'n_estimators': [100, 200, 300, 400, 500],
-            'max_depth': [None, 10, 20, 30, 40, 50],
-            'max_features': ['sqrt', 'log2', None]
-        }),
+        Method('random_forest', RandomForestClassifier,
+            {
+                'n_estimators': [100, 200, 300, 400, 500],
+                'max_depth': [None, 10, 20, 30, 40, 50],
+                'max_features': ['sqrt', 'log2', None]
+            }
+        ),
 
-        Method('gradient_boosted_trees', HistGradientBoostingClassifier, {
-            'learning_rate': [0.01, 0.1, 0.2],
-            'max_iter': [100, 300],
-            'max_leaf_nodes': [10, 31, 50]
-        }),
+        Method('gradient_boosted_trees', HistGradientBoostingClassifier,
+            {
+                'learning_rate': [0.01, 0.1, 0.2],
+                'max_iter': [100, 300],
+                'max_leaf_nodes': [10, 31, 50]
+            }
+        ),
 
+        Method('logistic_regression', LogisticRegression,
+            {
+                'penalty': ['l1', 'l2', 'elasticnet', 'none'],
+                'C': [0.01, 0.1, 1, 10, 100],
+                'solver': ['lbfgs', 'liblinear'],
+                'max_iter': [100, 200, 500]
+            }
+        ),
+
+        Method('decision_tree', DecisionTreeClassifier, {}),
     ]
