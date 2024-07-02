@@ -33,8 +33,8 @@ class Aux:
         auc = roc_auc_score(y_test, y_pred)
 
         # Checks for true positives and true negatives
-        normal = cm[0, 0]
-        anomaly = cm[1, 1]
+        normal = cm[0, 0] + cm[1,0]
+        anomaly = cm[1, 1] + cm[0, 1]
         
         results = {
             'F1-score': f1_score,
@@ -54,8 +54,10 @@ class Aux:
         pca_df = pd.read_csv("../files/pca_reduced_ds.csv")
         pearson_df = pd.read_csv("../files/pearson_reduced_ds.csv")
         lda_df = pd.read_csv("../files/lda_reduced_ds.csv")
+        pearson_pca_df = pd.read_csv("../files/pearson-pca_reduced_ds.csv")
+        pearson_lda_df = pd.read_csv("../files/pearson-lda_reduced_ds.csv")
 
-        return [og_df, pca_df, pearson_df, lda_df]
+        return [og_df, pca_df, pearson_df, lda_df, pearson_pca_df, pearson_lda_df]
     
     @classmethod
     def get_results_for_model(cls, ds: pd.DataFrame, model, params: dict) -> dict:
