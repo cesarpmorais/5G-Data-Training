@@ -2,3 +2,5 @@
 Research Repo for 5G Data Training, done with UFMG's Wireless Networks Lab (WiNet).
 
 The original dataset is too big for GitHub.
+
+More info on the project will become available soon.
