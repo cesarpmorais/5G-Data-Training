@@ -9,7 +9,7 @@ import numpy as np
 methods = get_methods()
 
 # Open the 'results' csv correctly
-csv_file_path = 'results.csv'
+csv_file_path = 'results_multiclass.csv'
 headers = ['Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Normal', 'Anomaly']
 
 if not os.path.exists(csv_file_path):
@@ -28,7 +28,7 @@ for method in methods:
         print(f"Running {method.name}:")
 
         ds_names = ['og', 'pca', 'pearson', 'lda', 'pearson-pca', 'pearson-lda']
-        datasets = Aux.get_datasets()
+        datasets = Aux.get_multiclass_datasets()
         rows_to_append = []
 
         for dataset, ds_name in zip(datasets, ds_names):
@@ -50,7 +50,7 @@ for method in methods:
     else:
         print(f"{method.name}'s been calculated. Checking for unused datasets...")
         ds_names = ['og', 'pca', 'pearson', 'lda', 'pearson-pca', 'pearson-lda']
-        datasets = Aux.get_datasets()
+        datasets = Aux.get_multiclass_datasets()
 
         for dataset, ds_name in zip(datasets, ds_names):
             if not ((df['Method'] == method.name) & (df['Dataset'] == ds_name)).any():
