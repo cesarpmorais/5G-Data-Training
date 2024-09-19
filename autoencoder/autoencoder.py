@@ -15,21 +15,43 @@ from tensorflow.keras.backend import clear_session
 
 class AutoencoderAux:
     @classmethod
-    def plot_reconstruction_error_distribution(cls, reconstruction_errors:list, labels:list, threshold=None):
-        for error, label in zip(reconstruction_errors, labels):
-            color = [random.random() for _ in range(3)]
-            plt.hist(error, bins=50, color=color, label=label)
+    def separate_datasets(cls, df):
+        # Get non-anomalous labels and features
+        non_anomalous_data = df[df.iloc[:, -1] == 1]
+        non_anomalous_labels = non_anomalous_data.iloc[:, -1]
+        non_anomalous_features = non_anomalous_data.iloc[:, :-1]
 
-        if threshold:
-            plt.axvline(threshold, color='r', linestyle='dashed', linewidth=2)
+        # Get anomalous labels and features
+        anomalous_data = df[df.iloc[:, -1] == -1]
+        anomalous_labels = anomalous_data.iloc[:, -1]
+        anomalous_features = anomalous_data.iloc[:, :-1]
 
-        plt.title('Reconstruction Error Histogram')
-        plt.xlabel('Reconstruction Error')
-        plt.ylabel('Frequency')
+        # Scale data
+        scaler = StandardScaler()
+        non_anomalous_features_scaled = scaler.fit_transform(non_anomalous_features)
+        anomalous_features_scaled = scaler.transform(anomalous_features)
 
-        plt.legend()
-        plt.show()
+        return non_anomalous_features_scaled, non_anomalous_labels, anomalous_features_scaled, anomalous_labels
 
+    @classmethod
+    def add_instances_to_testing(cls, X_train, y_train, X_test, y_test, percentage=0.2):
+        # Getting 20% of non-anomalies into training set
+        num_instances_to_move = int(percentage * X_train.shape[0])
+        random_indices = np.random.choice(X_train.shape[0], num_instances_to_move, replace=False)
+
+        ## Select 20% of the instances and their corresponding labels
+        X_train_subset = X_train[random_indices]
+        y_train_subset = y_train.iloc[random_indices]
+
+        ## Add the selected instances to the test set
+        X2_test = np.concatenate([X_test, X_train_subset], axis=0)
+        y2_test = np.concatenate([y_test, y_train_subset], axis=0)
+
+        ## Remove the selected instances from the training set
+        X2_train = np.delete(X_train, random_indices, axis=0)
+        y2_train = y_train.drop(y_train.index[random_indices])
+
+        return X2_train, y2_train, X2_test, y2_test 
 
 class Autoencoder:
     def __init__(self, input_dimension):
