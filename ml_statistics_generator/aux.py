@@ -43,7 +43,8 @@ class Aux:
             'Accuracy': accuracy,
             'AUC': auc,
             'Normal': normal,
-            'Anomaly': anomaly
+            'Anomaly': anomaly,
+            'Confusion Matrix': cm
         }
         
         return results

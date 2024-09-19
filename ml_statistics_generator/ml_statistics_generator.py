@@ -10,7 +10,7 @@ methods = get_methods()
 
 # Open the 'results' csv correctly
 csv_file_path = 'results.csv'
-headers = ['Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Normal', 'Anomaly']
+headers = ['Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Normal', 'Anomaly', 'Confusion Matrix']
 
 if not os.path.exists(csv_file_path):
     df = pd.DataFrame(columns=headers)
