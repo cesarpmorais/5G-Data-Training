@@ -22,7 +22,7 @@ class Aux:
         return X_train, X_test, y_train, y_test
 
     @classmethod
-    def __analyse_ml_results(cls, y_test, y_pred_proba):
+    def __analyse_ml_results(cls, y_test, y_pred_proba, normal_class_index=0):
         # Convert probabilities to class labels for confusion matrix and classification report
         y_pred = np.argmax(y_pred_proba, axis=1)
         
@@ -37,18 +37,29 @@ class Aux:
         # Calculate AUC for multiclass
         auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovo', average='weighted')
 
-        # Calculate normal and anomaly based on the confusion matrix
-        normal = cm[0, 0] + cm[1, 0]
-        anomaly = cm[1, 1] + cm[0, 1]
-        
+        # Count values
+        ## Counting normal values
+        correctly_identified_normal = cm[normal_class_index][normal_class_index]
+        missed_normal = cm[normal_class_index].sum() - correctly_identified_normal
+
+        ## Counting anomalies
+        num_classes = cm.shape[0]
+        correctly_identified_anomalies = sum(cm[i][i] for i in range(num_classes) if i != normal_class_index)
+        misclassified_anomalies = sum(cm[i][j] for i in range(num_classes) if i != normal_class_index for j in range(num_classes) if j != i and j != normal_class_index)
+        missed_anomalies = sum(cm[i][normal_class_index] for i in range(num_classes) if i != normal_class_index)
+
         results = {
             'F1-score': f1_score,
             'Precision': precision,
             'Recall': recall,
             'Accuracy': accuracy,
             'AUC': auc,
-            'Normal': normal,
-            'Anomaly': anomaly
+            'Correctly Identified Anomalies': correctly_identified_anomalies,
+            'Misclassified Anomalies': misclassified_anomalies,
+            'Missed Anomalies': missed_anomalies,
+            'Correctly Identified Normal': correctly_identified_normal,
+            'Missed Normal': missed_normal,
+            'Confusion Matrix': cm,
         }
         
         return results

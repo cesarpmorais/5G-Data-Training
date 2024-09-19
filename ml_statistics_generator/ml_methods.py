@@ -55,22 +55,22 @@ def get_methods() -> list:
             }
         ),
 
-        Method('gradient_boosted_trees', HistGradientBoostingClassifier,
-            {
-                'learning_rate': [0.01, 0.1, 0.2],
-                'max_iter': [100, 300],
-                'max_leaf_nodes': [10, 31, 50]
-            }
-        ),
+        #Method('gradient_boosted_trees', HistGradientBoostingClassifier,
+        #    {
+        #        'learning_rate': [0.01, 0.1, 0.2],
+        #        'max_iter': [100, 300],
+        #        'max_leaf_nodes': [10, 31, 50]
+        #    }
+        #),
 
-        Method('logistic_regression', LogisticRegression,
-            {
-                'penalty': ['l1', 'l2', 'elasticnet', 'none'],
-                'C': [0.01, 0.1, 1, 10, 100],
-                'solver': ['lbfgs', 'liblinear'],
-                'max_iter': [100, 200, 500]
-            }
-        ),
+        #Method('logistic_regression', LogisticRegression,
+        #    {
+        #        'penalty': ['l1', 'l2', 'elasticnet', 'none'],
+        #        'C': [0.01, 0.1, 1, 10, 100],
+        #        'solver': ['lbfgs', 'liblinear'],
+        #        'max_iter': [100, 200, 500]
+        #    }
+        #),
 
         Method('decision_tree', DecisionTreeClassifier, {}),
     ]

@@ -9,8 +9,11 @@ import numpy as np
 methods = get_methods()
 
 # Open the 'results' csv correctly
-csv_file_path = 'results_multiclass.csv'
-headers = ['Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Normal', 'Anomaly']
+csv_file_path = 'results_multiclass_confusion_matrix.csv'
+headers = [
+    'Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Correctly Identified Anomalies', 'Misclassified Anomalies',
+    'Missed Anomalies', 'Correctly Identified Normal', 'Missed Normal', 'Confusion Matrix'
+    ]
 
 if not os.path.exists(csv_file_path):
     df = pd.DataFrame(columns=headers)
