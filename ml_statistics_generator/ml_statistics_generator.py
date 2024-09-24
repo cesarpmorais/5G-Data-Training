@@ -9,7 +9,7 @@ import numpy as np
 methods = get_methods()
 
 # Open the 'results' csv correctly
-csv_file_path = 'results.csv'
+csv_file_path = 'results_with_cm.csv'
 headers = ['Method', 'Dataset', 'F1-score', 'Precision', 'Recall', 'Accuracy', 'AUC', 'Normal', 'Anomaly', 'Confusion Matrix']
 
 if not os.path.exists(csv_file_path):
