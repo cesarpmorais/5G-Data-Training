@@ -12,6 +12,7 @@ from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.backend import clear_session
+from tensorflow.keras.optimizers import Adam
 
 class AutoencoderAux:
     @classmethod
@@ -52,29 +53,103 @@ class AutoencoderAux:
         y2_train = y_train.drop(y_train.index[random_indices])
 
         return X2_train, y2_train, X2_test, y2_test 
+    
+    @classmethod
+    def compare_results(cls, anomalies_found, anomaly_label):
+        anomaly_labels = anomaly_label == -1
+
+        # Compare the arrays
+        correctly_identified = (anomalies_found == anomaly_labels)
+
+        # Calculate the number of correctly identified anomalies
+        correct_count = correctly_identified.sum()
+
+        # Calculate the total number of anomalies and normal instances
+        total_anomalies = anomaly_labels.sum()
+        total_normal = (~anomaly_labels).sum()
+
+        num_anomalies_detected = anomalies_found.sum()
+        print(f"Number of anomalies detected: {num_anomalies_detected}")
+
+        # Calculate accuracy, precision, recall, etc.
+        accuracy = correct_count / len(anomalies_found)
+
+        true_positives = (anomalies_found & anomaly_labels).sum()
+        false_positives = (anomalies_found & ~anomaly_labels).sum()
+        true_negatives = (~anomalies_found & ~anomaly_labels).sum()
+        false_negatives = (~anomalies_found & anomaly_labels).sum()
+
+        print(f"True Positives: {true_positives}")
+        print(f"False Positives: {false_positives}")
+        print(f"True Negatives: {true_negatives}")
+        print(f"False Negatives: {false_negatives}")
+
+        if anomalies_found.sum() > 0:
+            precision = true_positives / anomalies_found.sum()
+        else:
+            precision = 0.0  # To handle division by zero
+
+        if total_anomalies > 0:
+            recall = true_positives / total_anomalies
+        else:
+            recall = 0.0  # To handle division by zero
+
+        print()
+
+        print(f"Accuracy: {accuracy}")
+        print(f"Precision: {precision}")
+        print(f"Recall: {recall}")
+
 
 class Autoencoder:
-    def __init__(self, input_dimension):
+    def __init__(self, input_dimension, normal_training=True,activation='relu'):
         input_layer = Input(shape=(input_dimension,))
+        
+        if(normal_training):
+            # Encoder
+            encoding_layer_1 = Dense(512, activation=activation)(input_layer)
+            encoding_layer_2 = Dense(256, activation=activation)(encoding_layer_1)
+            encoding_layer_3 = Dense(128, activation=activation)(encoding_layer_2)
+            encoding_layer_4 = Dense(64, activation=activation)(encoding_layer_3)
+            encoding_layer_5 = Dense(32, activation=activation)(encoding_layer_4)
+            # Decoder
+            decoding_layer_0 = Dense(32, activation=activation)(encoding_layer_5)
+            decoding_layer_1 = Dense(64, activation=activation)(decoding_layer_0)
+            decoding_layer_2 = Dense(128, activation=activation)(decoding_layer_1)
+            decoding_layer_3 = Dense(256, activation=activation)(decoding_layer_2)
+            decoding_layer_4 = Dense(512, activation=activation)(decoding_layer_3)
+            output_layer = Dense(input_dimension)(decoding_layer_4)
 
-        # Encoder
-        encoding_layer_1 = Dense(64, activation='sigmoid')(input_layer)
-        encoding_layer_2 = Dense(32, activation='sigmoid')(encoding_layer_1)
-        encoding_layer_3 = Dense(16, activation='sigmoid')(encoding_layer_2)
-        encoding_layer_4 = Dense(8, activation='sigmoid')(encoding_layer_3)
+            # Create the autoencoder model
+            self.autoencoder = Model(input_layer, output_layer)
 
-        # Decoder
-        decoding_layer_1 = Dense(8, activation='sigmoid')(encoding_layer_4)
-        decoding_layer_2 = Dense(16, activation='sigmoid')(decoding_layer_1)
-        decoding_layer_3 = Dense(32, activation='sigmoid')(decoding_layer_2)
-        decoding_layer_4 = Dense(64, activation='sigmoid')(decoding_layer_3)
-        output_layer = Dense(input_dimension, activation='sigmoid')(decoding_layer_4)
+            custom_optimizer = Adam(learning_rate=0.001)
+            self.autoencoder.compile(optimizer=custom_optimizer, loss='mean_absolute_error')
 
-        # Create the autoencoder model
-        self.autoencoder = Model(input_layer, output_layer)
-        self.autoencoder.compile(optimizer='adam', loss='mean_squared_error')
+            self.initial_weights = self.autoencoder.get_weights()
+        else:
+            # Encoder
+            encoding_layer_1 = Dense(512, activation=activation)(input_layer)
+            encoding_layer_2 = Dense(256, activation=activation)(encoding_layer_1)
+            encoding_layer_3 = Dense(128, activation=activation)(encoding_layer_2)
+            encoding_layer_4 = Dense(64, activation=activation)(encoding_layer_3)
+            encoding_layer_5 = Dense(32, activation=activation)(encoding_layer_4)
+            # Decoder
+            decoding_layer_0 = Dense(32, activation=activation)(encoding_layer_5)
+            decoding_layer_1 = Dense(64, activation=activation)(decoding_layer_0)
+            decoding_layer_2 = Dense(128, activation=activation)(decoding_layer_1)
+            decoding_layer_3 = Dense(256, activation=activation)(decoding_layer_2)
+            decoding_layer_4 = Dense(512, activation=activation)(decoding_layer_3)
+            output_layer = Dense(input_dimension)(decoding_layer_4)
 
-        self.initial_weights = self.autoencoder.get_weights()
+            # Create the autoencoder model
+            self.autoencoder = Model(input_layer, output_layer)
+
+            custom_optimizer = Adam(learning_rate=0.001)
+            self.autoencoder.compile(optimizer=custom_optimizer, loss='mean_squared_error')
+
+            self.initial_weights = self.autoencoder.get_weights()
+
 
     def train_model(self, X_train, epochs=200, batch_size=128):
         # Reset weights
